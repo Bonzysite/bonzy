@@ -8,9 +8,15 @@ $pageTitle = 'AGT Shop — Home';
 $db = get_db();
 
 // Fetch featured/latest products
-$stmt = $db->prepare('SELECT p.id, p.title, p.price_cents, p.thumbnail_path FROM products p WHERE p.is_active = 1 ORDER BY p.created_at DESC LIMIT 12');
-$stmt->execute();
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+try {
+    $stmt = $db->prepare('SELECT p.id, p.title, p.price_cents, p.thumbnail_path FROM products p WHERE p.is_active = 1 ORDER BY p.created_at DESC LIMIT 12');
+    $stmt->execute();
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // If products table doesn't exist, initialize empty array and log error
+    $products = [];
+    error_log("Database error in index.php: " . $e->getMessage());
+}
 
 render_header($pageTitle);
 ?>
