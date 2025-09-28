@@ -8,8 +8,9 @@ $pageTitle = 'AGT Shop — Home';
 $db = get_db();
 
 // Fetch featured/latest products
-$stmt = $db->query('SELECT p.id, p.title, p.price_cents, p.thumbnail_path FROM products p WHERE p.is_active = 1 ORDER BY p.created_at DESC LIMIT 12');
-$products = $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
+$stmt = $db->prepare('SELECT p.id, p.title, p.price_cents, p.thumbnail_path FROM products p WHERE p.is_active = 1 ORDER BY p.created_at DESC LIMIT 12');
+$stmt->execute();
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 render_header($pageTitle);
 ?>
